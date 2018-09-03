@@ -1,4 +1,5 @@
-var game = new Phaser.Game(208, 208, Phaser.AUTO, 'mineSweeper', { preload: preload, create: create, render: render });
+//currently set to canvas instead of auto because chrome is having issues with WEBGL on its current version
+var game = new Phaser.Game(208, 208, Phaser.CANVAS, 'mineSweeper', { preload: preload, create: create, render: render });
 
 var SQUARE_SIZE = 16;
 var BOARD_COLS;
@@ -26,7 +27,6 @@ function preload() {
 
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.setMinMax(214, 214, 838, 838);
-    console.log("Enabled Scaling");
 }
 
 function create() {
@@ -102,7 +102,6 @@ function spawnBoard() {
             SafeSquares += 1;
         }  
     }
-    selectedSquare = null;
 }
 
 function spawnBombs(){
@@ -131,7 +130,7 @@ function confirmSquare(square, pointer) {
     console.log(square.posX);
     console.log(square.posY); 
 
-    if (square.frame === 0 || square.frame === 1 || square.frame === 12 )
+    if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
     {
         console.log("square was not yet clicked");
         if(pointer.leftButton.isDown){
@@ -176,6 +175,7 @@ function clearSquare(square, surroundingBombs){
         console.log("clearing this square");
         console.log(surroundingBombs);
         square.frame = (surroundingBombs + 3);
+        square.inputEnabled = false;
         console.log("lowering safe square count");
         SafeSquares -= 1;
         console.log(SafeSquares);
