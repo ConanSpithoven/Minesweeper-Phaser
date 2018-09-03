@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1200, 900, Phaser.AUTO, 'mineSweeper', { preload: preload, create: create, render: render });
+var game = new Phaser.Game(208, 208, Phaser.AUTO, 'mineSweeper', { preload: preload, create: create, render: render });
 
 var SQUARE_SIZE = 16;
 var BOARD_COLS;
@@ -28,9 +28,9 @@ function preload() {
 function create() {
 
     // create the buttons for grid options
-    button9x9 = game.add.button(game.world.centerX - 32, game.world.centerY - 50, 'button9x9', NineGrid, this);
-    button11x11 = game.add.button(game.world.centerX - 32, game.world.centerY, 'button11x11', ElevenGrid, this);
-    button13x13 = game.add.button(game.world.centerX - 32, game.world.centerY + 50, 'button13x13', ThirteenGrid, this);
+    button9x9 = game.add.button(game.world.centerX-16, game.world.centerY - 50, 'button9x9', NineGrid, this);
+    button11x11 = game.add.button(game.world.centerX-16, game.world.centerY, 'button11x11', ElevenGrid, this);
+    button13x13 = game.add.button(game.world.centerX-16, game.world.centerY + 50, 'button13x13', ThirteenGrid, this);
 
 }
 
@@ -323,15 +323,15 @@ function checkBombsInSurroundings(square){
 function GameEnd(succes){
     squares.inputEnabled = false;
     if(succes){
-    Victory = "Congratulations, you avoided all the bombs";
+    Victory = "YOU WIN!";
     } else if (!succes){
-    GameOver = "You struck a Bomb, you lost.";
+    GameOver = "YOU LOSE!";
     }
 }
 
 function render() {
 
     //remember to reset this after the button is clicked
-    game.debug.text(GameOver, 620, 208, 'rgb(255,0,0)');
-    game.debug.text(Victory, 620, 208, 'rgb(0,255,0)');
+    game.debug.text(GameOver, game.world.centerX, game.world.centerY, 'rgb(255,0,0)');
+    game.debug.text(Victory, game.world.centerX, game.world.centerY, 'rgb(0,255,0)');
 }
