@@ -86,8 +86,6 @@ function spawnBoard() {
 
     squares = game.add.group();
 
-    game.input.mouse.capture = true;
-
     for (var i = 0; i < BOARD_COLS; i++)
     {
         for (var j = 0; j < BOARD_ROWS; j++)
@@ -127,13 +125,10 @@ function spawnBombs(){
 }
 
 function confirmSquare(square, pointer) {
-    console.log(square.posX);
-    console.log(square.posY); 
-
     if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
     {
         console.log("square was not yet clicked");
-        if(pointer.leftButton.isDown){
+        if(pointer.leftButton.isDown || pointer.onTap){
             if(getSquareType(square) === 1){
                 console.log("square is a bomb");
                 square.frame = 2;
@@ -145,7 +140,7 @@ function confirmSquare(square, pointer) {
                 console.log("there are " + surroundingBombs + " bombs around this square");
                 clearSquare(square, surroundingBombs);        
             }
-        } else if(pointer.rightButton.isDown){
+        } else if(pointer.rightButton.isDown || pointer.onHold){
             markSquare(square);
         }  
     }
@@ -325,7 +320,6 @@ function checkBombsInSurroundings(square){
 }
 
 function GameEnd(succes){
-    squares.inputEnabled = false;
     if(succes){
     Victory = "YOU WIN!";
     } else if (!succes){
