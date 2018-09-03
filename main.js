@@ -10,12 +10,13 @@ var BombsToProcess = 0;
 var SafeSquares = 0;
 var TotalSquares = 0;
 var bombSquare;
+var marking = false;
+var holdtimer = 0;
 
 var button9x9;
 var button11x11;
 var button13x13;
 
-var TouchTest = "";
 var GameOver = "";
 var Victory = "";
 
@@ -36,7 +37,7 @@ function create() {
     button9x9 = game.add.button(game.world.centerX-16, game.world.centerY - 50, 'button9x9', NineGrid, this);
     button11x11 = game.add.button(game.world.centerX-16, game.world.centerY, 'button11x11', ElevenGrid, this);
     button13x13 = game.add.button(game.world.centerX-16, game.world.centerY + 50, 'button13x13', ThirteenGrid, this);
-
+    game.input.onUp.add(getTime, this);
 }
 
 function NineGrid(){
@@ -94,7 +95,8 @@ function spawnBoard() {
             var square = squares.create(i * SQUARE_SIZE, j * SQUARE_SIZE, "SQUARES");
             square.name = 'square' + i.toString() + 'x' + j.toString();
             square.inputEnabled = true;
-            square.events.onInputDown.add(confirmSquare, this);
+            square.events.onInputDown.add(selectSquare, this);
+            square.events.onInputUp.add(confirmSquare, this);
             square.frame = 0;
             square.origframe = 0;
             setSquarePos(square, i, j);
@@ -125,14 +127,27 @@ function spawnBombs(){
     }
 }
 
-function confirmSquare(square, pointer) {
+function selectSquare(square, pointer) {
     
     if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
     {
-        console.log("square was not yet clicked");
+        console.log("square selected");
         if(pointer.rightButton.isDown){
+            marking = true;
+            console.log("marking: " + marking);
+        }
+    }
+}
+
+function confirmSquare(square, pointer){
+    if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
+    {
+        console.log("Hold time: " + holdtimer);
+        if(marking === true || holdtimer >= 1000){
+            if(holdtimer >=1000)
+            {console.log("marked by holding");}
             markSquare(square);
-        } else{
+        } else {
             checkSquare(square);
         }
     }
@@ -148,6 +163,7 @@ function markSquare(square){
     } else if (square.frame === 12){
         square.frame = square.origframe;
     }
+    marking = false;
 }
 
 function checkSquare(square){
@@ -214,7 +230,8 @@ function getSquareType(square) {
 }
 
 function getTime(pointer) {
-    return pointer.duration;
+    holdtimer = pointer.duration;
+    console.log("holdtimer: " + holdtimer);
 }
 
 // check if there is a bomb in the given direction
@@ -342,5 +359,4 @@ function render() {
     //remember to reset this after the button is clicked
     game.debug.text(GameOver, game.world.centerX, game.world.centerY, 'rgb(255,0,0)');
     game.debug.text(Victory, game.world.centerX, game.world.centerY, 'rgb(0,255,0)');
-    game.debug.text(TouchTest, game.world.centerX, game.world.centerY+20, 'rgb(0,0,255)');
 }
