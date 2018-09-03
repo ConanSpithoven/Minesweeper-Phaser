@@ -15,6 +15,7 @@ var button9x9;
 var button11x11;
 var button13x13;
 
+var TapTest = "";
 var GameOver = "";
 var Victory = "";
 
@@ -94,6 +95,7 @@ function spawnBoard() {
             square.name = 'square' + i.toString() + 'x' + j.toString();
             square.inputEnabled = true;
             square.events.onInputDown.add(confirmSquare, this);
+            game.input.onTap.add(onTap, this)
             square.frame = 0;
             square.origframe = 0;
             setSquarePos(square, i, j);
@@ -124,13 +126,15 @@ function spawnBombs(){
     }
 }
 
+function onTap(square, doubletap){
+    TapTest = "Tap registered";
+}
+
 function confirmSquare(square, pointer) {
     if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
     {
         console.log("square was not yet clicked");
-        if(pointer.rightButton.isDown){
-            markSquare(square);
-        }  else {
+        if(pointer.leftButton.isDown){
             if(getSquareType(square) === 1){
                 console.log("square is a bomb");
                 square.frame = 2;
@@ -142,7 +146,9 @@ function confirmSquare(square, pointer) {
                 console.log("there are " + surroundingBombs + " bombs around this square");
                 clearSquare(square, surroundingBombs);        
             }
-        }
+        } else if(pointer.rightButton.isDown){
+            markSquare(square);
+        }  
     }
 }
 
@@ -332,4 +338,5 @@ function render() {
     //remember to reset this after the button is clicked
     game.debug.text(GameOver, game.world.centerX, game.world.centerY, 'rgb(255,0,0)');
     game.debug.text(Victory, game.world.centerX, game.world.centerY, 'rgb(0,255,0)');
+    game.debug.text(TapTest, game.world.centerX, game.world.centerY, 'rgb(0,0,255)');
 }
