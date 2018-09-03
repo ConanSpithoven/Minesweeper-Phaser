@@ -23,6 +23,9 @@ function preload() {
     game.load.image("button9x9", "button9x9.png");
     game.load.image("button11x11", "button11x11.png");
     game.load.image("button13x13", "button13x13.png");
+
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.setMinMax(214, 214, 838, 838);
 }
 
 function create() {
