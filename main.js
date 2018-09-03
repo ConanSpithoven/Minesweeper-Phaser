@@ -124,9 +124,6 @@ function spawnBombs(){
        }
     }
 }
-function onTouch(square){
-    TouchTest = "Touch registered";
-}
 
 function confirmSquare(square, pointer) {
     
@@ -136,18 +133,7 @@ function confirmSquare(square, pointer) {
         if(pointer.rightButton.isDown){
             markSquare(square);
         } else{
-            onTouch(square);
-            if(getSquareType(square) === 1){
-                console.log("square is a bomb");
-                square.frame = 2;
-                GameEnd(false);
-            } else if (getSquareType(square) === 0){
-                console.log("square is not a bomb");
-                console.log(square);
-                var surroundingBombs = checkBombs(square);
-                console.log("there are " + surroundingBombs + " bombs around this square");
-                clearSquare(square, surroundingBombs);        
-            }
+            checkSquare(square);
         }
     }
 }
@@ -161,6 +147,20 @@ function markSquare(square){
         console.log("square is marked");
     } else if (square.frame === 12){
         square.frame = square.origframe;
+    }
+}
+
+function checkSquare(square){
+    if(getSquareType(square) === 1){
+        console.log("square is a bomb");
+        square.frame = 2;
+        GameEnd(false);
+    } else if (getSquareType(square) === 0){
+        console.log("square is not a bomb");
+        console.log(square);
+        var surroundingBombs = checkBombs(square);
+        console.log("there are " + surroundingBombs + " bombs around this square");
+        clearSquare(square, surroundingBombs);        
     }
 }
 
@@ -211,6 +211,10 @@ function getSquareType(square) {
 
     return square.frame;
 
+}
+
+function getTime(pointer) {
+    return pointer.duration;
 }
 
 // check if there is a bomb in the given direction
