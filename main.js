@@ -26,6 +26,7 @@ function preload() {
 
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.setMinMax(214, 214, 838, 838);
+    console.log("Enabled Scaling");
 }
 
 function create() {
