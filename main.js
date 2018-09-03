@@ -94,7 +94,6 @@ function spawnBoard() {
             square.name = 'square' + i.toString() + 'x' + j.toString();
             square.inputEnabled = true;
             square.events.onInputDown.add(confirmSquare, this);
-            game.input.onTap.add(confirmSquare, square);
             square.frame = 0;
             square.origframe = 0;
             setSquarePos(square, i, j);
@@ -126,11 +125,12 @@ function spawnBombs(){
 }
 
 function confirmSquare(square, pointer) {
-    console.log(game.input.onTap);
     if ((square.frame === 0 || square.frame === 1 || square.frame === 12) && square.inputEnabled === true)
     {
         console.log("square was not yet clicked");
-        if(pointer.leftButton.isDown || pointer.onTap){
+        if(pointer.rightButton.isDown){
+            markSquare(square);
+        }  else {
             if(getSquareType(square) === 1){
                 console.log("square is a bomb");
                 square.frame = 2;
@@ -142,9 +142,7 @@ function confirmSquare(square, pointer) {
                 console.log("there are " + surroundingBombs + " bombs around this square");
                 clearSquare(square, surroundingBombs);        
             }
-        } else if(pointer.rightButton.isDown){
-            markSquare(square);
-        }  
+        }
     }
 }
 
